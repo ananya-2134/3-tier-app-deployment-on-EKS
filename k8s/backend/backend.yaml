@@ -13,17 +13,44 @@ spec:
       labels:
         app: backend
     spec:
+
+      initContainers:
+        - name: wait-for-mongo
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z mongo 27017; do
+                echo "Waiting for MongoDB..."
+                sleep 2
+              done
+
       containers:
         - name: backend
           image: 360477615168.dkr.ecr.eu-north-1.amazonaws.com/mern-backend:v1
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
           env:
             - name: PORT
               value: "5000"
             - name: MONGODB_ATLAS_CONNECTION
-              value: mongodb://mongo.mern-app.svc.cluster.local:27017/todos
+              value: "mongodb://mongo.mern-app.svc.cluster.local:27017/todos"
+          volumeMounts:
+            - name: applogs
+              mountPath: /var/log
+
+        - name: backend-logger
+          image: busybox
+          command: ["sh","-c","touch /var/log/app.log && tail -n+1 -F /var/log/app.log"]
+          volumeMounts:
+            - name: applogs
+              mountPath: /var/log
+
+      volumes:
+        - name: applogs
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

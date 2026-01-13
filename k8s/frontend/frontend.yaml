@@ -13,12 +13,39 @@ spec:
       labels:
         app: frontend
     spec:
+      initContainers:
+        - name: wait-for-backend
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z backend 5000; do
+                echo "Waiting for Backend..."
+                sleep 2
+              done
+
       containers:
+
         - name: frontend
           image: 360477615168.dkr.ecr.eu-north-1.amazonaws.com/mern-frontend:v3
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
+          volumeMounts:
+            - name: nginx-logs
+              mountPath: /var/log/nginx
+
+        - name: frontend-logger
+          image: busybox
+          command: ["sh","-c","tail -n+1 -F /var/log/nginx/access.log"]
+          volumeMounts:
+            - name: nginx-logs
+              mountPath: /var/log/nginx
+
+      volumes:
+        - name: nginx-logs
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

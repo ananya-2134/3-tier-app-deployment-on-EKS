@@ -1,0 +1,18 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: mern-eks
+  region: eu-north-1
+  version: "1.29"
+
+iam:
+  withOIDC: true   # VERY IMPORTANT → enables OIDC automatically
+
+managedNodeGroups:
+  - name: mern-ng
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 3
+    volumeSize: 30
