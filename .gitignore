@@ -1,3 +1,10 @@
+infra/.terraform/
+infra/.terraform.lock.hcl
+infra/terraform.tfstate
+infra/terraform.tfstate.backup
+infra/*.tfvars
+
+
 **/node_modules
 **/dist
 **/.env
@@ -5,7 +12,13 @@
 *.log
 
 *.kubeconfig
+kubeconfig*
+.aws/
+*.pem
 
 .DS_Store
 
 .eksctl*
+
+infra/*.plan
+.argocd/    
