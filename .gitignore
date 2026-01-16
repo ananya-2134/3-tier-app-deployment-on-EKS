@@ -1,24 +1,35 @@
+# Terraform
 infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.*
 infra/.terraform.lock.hcl
-infra/terraform.tfstate
-infra/terraform.tfstate.backup
 infra/*.tfvars
+infra/*.tfplan
+infra/*.plan
 
-
-**/node_modules
-**/dist
-**/.env
-
-*.log
-
-*.kubeconfig
+# EKS / kubeconfig
 kubeconfig*
+*.kubeconfig
+.kube/
+.eksctl*
+
+# AWS CLI
 .aws/
 *.pem
 
+# Node / Frontend
+**/node_modules/
+**/dist/
+**/.env
+
+# ArgoCD local files
+.argocd/
+
+# Logs
+*.log
+
+# OS / IDE
 .DS_Store
-
-.eksctl*
-
-infra/*.plan
-.argocd/    
+Thumbs.db
+.vscode/
+.idea/

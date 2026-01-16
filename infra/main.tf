@@ -20,17 +20,20 @@ module "eks" {
 
   cluster_name    = var.cluster_name
   cluster_version = "1.29"
+  
+  cluster_endpoint_private_access = false
+  cluster_endpoint_public_access = true
 
   subnet_ids = data.aws_subnets.default.ids
   vpc_id     = data.aws_vpc.default.id
 
   enable_irsa = true
-
+  cluster_encryption_config = [ ]
+  create_kms_key  = false
+  create_cloudwatch_log_group = false
   eks_managed_node_groups = {
     default = {
       instance_types = ["t3.medium"]
-      min_size       = 2
-      max_size       = 3
       desired_size   = 2
     }
   }
